@@ -30,6 +30,9 @@ module_64_8 module_64_8_1
 always #10 clk = !clk;
 
 initial begin
+
+    @(negedge clk);
+
     for( i = 0;i < 15; i++)
     begin
         @(negedge clk);
@@ -44,7 +47,7 @@ initial begin
 
     reset_n = 1;
 
-    for( i = 0;i < 5; i++)
+    for( i = 0;i < 7; i++)
     begin
         @(negedge clk);
     end
