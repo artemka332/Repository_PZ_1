@@ -27,20 +27,20 @@ module_64_8 module_64_8_1
     .data_out(data_out)
 );
 
-always #10 clk = !clk;
+always #5 clk = !clk;
 
 initial begin
 
     @(negedge clk);
+    @(negedge clk);
+    @(negedge clk);
+    @(negedge clk);
+    @(negedge clk);
 
-    for( i = 0;i < 15; i++)
-    begin
-        @(negedge clk);
-    end
 
     reset_n = 0;
 
-    for( i = 0;i < 15; i++)
+    for( i = 0;i < 10; i++)
     begin
         @(negedge clk);
     end
