@@ -31,39 +31,47 @@ always #10 clk = !clk;
 
 initial begin
 
-    @(negedge clk);
-
+    // ждём несколько тактов
     for( i = 0;i < 15; i++)
     begin
         @(negedge clk);
     end
 
+    // активируем сигнал сброса данных
     reset_n = 0;
 
+    // ждём несколько тактов
     for( i = 0;i < 15; i++)
     begin
         @(negedge clk);
     end
 
+    // деактивируем сигнал сброса
     reset_n = 1;
 
+    // ждём несколько тактов
     for( i = 0;i < 7; i++)
     begin
         @(negedge clk);
     end
+
+    // поднимаем сигнал разрешения записи данных
+    strobe_in = 1;
 
     // запись данных
     for( i = 0;i < 16; i++)
     begin
-        strobe_in = 1;
+        // генерируем данные для младшей и старшей части
         input_data[63:32] = $urandom();
         input_data[31:0] = $urandom();
-        @(negedge clk);
+        @(negedge clk); // добавили задержку
     end
 
+    // убираем сигнал сброса данных
     strobe_in = 0;
 
-    for( i = 0;i < 7; i++)
+    // продвигаем время моделирования
+    for( i = 0;i < 100; i++)
     begin
         @(negedge clk);
     end
