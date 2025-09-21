@@ -10,7 +10,8 @@ module module_64_8
     output  ready,              // сигнал готовности
     output data_end,            // сигнал конца строки
     output  strobe_out,         // сигнал строба на выход
-    output  [7:0] data_out      // выходные данные
+    output  [7:0] data_out,      // выходные данные
+    output full
 );
 
 // память для модуля fifo
@@ -24,7 +25,7 @@ reg [3:0] rd_adr;
 wire read_enable;
 
 // сигнал полного и пустого fifo
-wire full = (wr_adr[2:0] == rd_adr[2:0]) && (wr_adr[3]!= rd_adr[3]);
+assign full = (wr_adr[2:0] == rd_adr[2:0]) && (wr_adr[3]!= rd_adr[3]);
 wire empty = wr_adr == rd_adr;
 
 assign ready = empty;
