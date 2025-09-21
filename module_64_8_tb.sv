@@ -53,14 +53,20 @@ initial begin
     end
 
     // запись данных
-    for( i = 0;i < 5; i++)
+    for( i = 0;i < 16; i++)
     begin
         strobe_in = 1;
-        input_data = $urandom() % 1024;
+        input_data[63:32] = $urandom();
+        input_data[31:0] = $urandom();
         @(negedge clk);
     end
 
     strobe_in = 0;
+
+    for( i = 0;i < 7; i++)
+    begin
+        @(negedge clk);
+    end
 
 end
 
