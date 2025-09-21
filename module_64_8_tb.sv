@@ -64,6 +64,11 @@ initial begin
 
 end
 
+always @(posedge clk)
+begin
+    $display("Данные на выходе: %d",data_out);
+end
+
 // блок запроса данных
 always @(posedge clk)
 begin
