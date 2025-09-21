@@ -3,15 +3,16 @@
 module module_64_8
 #(parameter width = 64, parameter depth = 8)
 (
-    input   clk,                // сигнал синхронизации
-    input   reset_n,            // сигнал сброса
-    input   strobe_in,          // сигнал строба
-    input   [width-1:0] input_data,  // входные данные
-    input   req_data,           // запрос на вывод данных
-    output  ready,              // сигнал готовности
-    output data_end,            // сигнал конца строки
-    output  strobe_out,         // сигнал строба на выход
-    output  [7:0] data_out      // выходные данные
+    input   clk,                                // сигнал синхронизации
+    input   reset_n,                            // сигнал сброса
+    input   strobe_in,                          // сигнал строба
+    input   [width-1:0] input_data,             // входные данные
+    input   req_data,                           // запрос на вывод данных
+    output  ready,                              // сигнал готовности
+    output data_end,                            // сигнал конца строки
+    output  strobe_out,                         // сигнал строба на выход
+    output  [7:0] data_out,                     // выходные данные
+    output [$clog2(depth)-1:0]  write_counter
 );
 
 // память для модуля fifo
@@ -27,6 +28,8 @@ wire read_enable;
 // сигнал полного и пустого fifo
 wire full = (wr_adr[$clog2(width)-1:0] == rd_adr[$clog2(width)-1:0]) && (wr_adr[$clog2(width)]!= rd_adr[$clog2(width)]);
 wire empty = wr_adr == rd_adr;
+
+assign write_counter = wr_adr - rd_adr;
 
 assign ready = empty;
 
@@ -52,7 +55,7 @@ always @(posedge clk)
 begin
     if(strobe_in && !full)
     begin
-        mem[wr_adr[2:0]] <= input_data; // запись данных
+        mem[wr_adr[$clog2(width)-1:0]] <= input_data; // запись данных
     end
 end
 
@@ -87,7 +90,7 @@ begin
     begin
         if(read_enable)
         begin
-           data_out_fifo <=  mem[rd_adr[2:0]]; // запись в промежуточный буффер
+           data_out_fifo <=  mem[rd_adr[$clog2(width)-1:0]]; // запись в промежуточный буффер
         end
     end
 end
