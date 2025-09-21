@@ -1,11 +1,12 @@
 `include "FSM_out.sv"
 
 module module_64_8
+#(parameter width = 64, parameter depth = 8)
 (
     input   clk,                // сигнал синхронизации
     input   reset_n,            // сигнал сброса
     input   strobe_in,          // сигнал строба
-    input   [63:0] input_data,  // входные данные
+    input   [width-1:0] input_data,  // входные данные
     input   req_data,           // запрос на вывод данных
     output  ready,              // сигнал готовности
     output data_end,            // сигнал конца строки
@@ -14,17 +15,17 @@ module module_64_8
 );
 
 // память для модуля fifo
-reg [63:0] mem [7:0];
+reg [width-1:0] mem [depth-1:0];
 
 // указатели чтения и записи данных в fifo
-reg [3:0] wr_adr;
-reg [3:0] rd_adr;
+reg [$clog2(depth):0] wr_adr;
+reg [$clog2(width):0] rd_adr;
 
 // сигнал разрешения чтения данных
 wire read_enable;
 
 // сигнал полного и пустого fifo
-wire full = (wr_adr[2:0] == rd_adr[2:0]) && (wr_adr[3]!= rd_adr[3]);
+wire full = (wr_adr[$clog2(width)-1:0] == rd_adr[$clog2(width)-1:0]) && (wr_adr[$clog2(width)]!= rd_adr[$clog2(width)]);
 wire empty = wr_adr == rd_adr;
 
 assign ready = empty;
@@ -73,7 +74,7 @@ begin
 end
 
 // промежуточный буффер для данных из fifo
-reg [63:0] data_out_fifo;
+reg [width-1:0] data_out_fifo;
 
 always @(posedge clk)
 begin
