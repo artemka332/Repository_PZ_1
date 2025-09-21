@@ -32,6 +32,10 @@ always #5 clk = !clk;
 initial begin
 
     @(negedge clk);
+    @(negedge clk);
+    @(negedge clk);
+    @(negedge clk);
+    @(negedge clk);
 
 
     reset_n = 0;
